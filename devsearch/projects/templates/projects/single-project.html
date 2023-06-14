@@ -3,6 +3,13 @@
 
 {% block content %}
     <h1>{{project.title}}</h1>
+    <hr>
+    {% for tag_elem in project.tags.all %}
+        <span style="border:1px solid grey">{{tag_elem}}</span>
+    {% endfor %}
+    
+        
+    <hr>
     <br>
     <p>{{project.description}}</p>
 {% endblock content %}
