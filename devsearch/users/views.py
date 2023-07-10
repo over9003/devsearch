@@ -8,7 +8,7 @@ from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
 
 def loginUser(request):
-    page = 'login'
+    # page = 'login'
     if request.user.is_authenticated:
         return redirect('profiles')
 
@@ -113,6 +113,7 @@ def createSkill(request):
             skill = form.save(commit=False)
             skill.owner = profile
             skill.save()
+            messages.success(request, "skill was added! success!")
             return redirect('account')
     context = {'form': form}
     return render(request, 'users/skill_form.html', context)
@@ -128,7 +129,19 @@ def updateSkill(request, pk):
         form = SkillForm(request.POST, instance=skill)
         if form.is_valid():
             skill.save()
+            messages.success(request, "skill was updated! success!")
             return redirect('account')
 
     context = {'form': form}
     return render(request, 'users/skill_form.html', context)
+
+
+def deleteSkill(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    if request.method == "POST":
+        skill.delete()
+        messages.success(request, "skill was deleted! success!")
+        return redirect('account')
+    context = {'object': skill}
+    return render(request, 'delete_template.html', context)
